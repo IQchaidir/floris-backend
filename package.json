@@ -1,33 +1,34 @@
 {
-  "name": "floris-backend",
-  "scripts": {
-    "dev": "bun run --hot src/index.tsx",
-    "start": "bun run src/index.tsx",
-    "docker:dev": "docker compose -f docker-compose.dev.yaml up -d",
-    "docker:prod": "docker compose up -d",
-    "db:migrate:dev": "prisma migrate dev",
-    "db:migrate:deploy": "prisma migrate deploy",
-    "db:gen": "prisma generate --no-hints",
-    "db:seed": "prisma db seed",
-    "db:studio": "prisma studio",
-    "seed": "bun run prisma/seed.ts"
-  },
-  "prisma": {
-  "seed": "tsx prisma/seed.ts"
-  },  
-  "dependencies": {
-    "@hono/swagger-ui": "^0.4.1",
-    "@hono/zod-openapi": "^0.16.0",
-    "@hono/zod-validator": "^0.2.2",
-    "@prisma/client": "^5.17.0",
-    "hono": "^4.4.5",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/node": "^20.14.2",
-    "prisma": "^5.17.0",
-    "tsx": "^4.15.2",
-    "typescript": "^5.4.5"
-  }
+    "name": "floris-backend",
+    "scripts": {
+        "dev": "bun run --hot src/index.tsx",
+        "start": "bun run src/index.tsx",
+        "start:migrate:production": " bunx prisma migrate deploy &&  bun run src/index.tsx",
+        "docker:dev": "docker compose -f docker-compose.dev.yaml up -d",
+        "docker:prod": "docker compose up -d",
+        "db:migrate:dev": "prisma migrate dev",
+        "db:migrate:deploy": "prisma migrate deploy",
+        "db:gen": "prisma generate --no-hints",
+        "db:seed": "prisma db seed",
+        "db:studio": "prisma studio",
+        "seed": "bun run prisma/seed.ts"
+    },
+    "prisma": {
+        "seed": "tsx prisma/seed.ts"
+    },
+    "dependencies": {
+        "@hono/swagger-ui": "^0.4.1",
+        "@hono/zod-openapi": "^0.16.0",
+        "@hono/zod-validator": "^0.2.2",
+        "@prisma/client": "^5.17.0",
+        "hono": "^4.4.5",
+        "zod": "^3.23.8"
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "@types/node": "^20.14.2",
+        "prisma": "^5.17.0",
+        "tsx": "^4.15.2",
+        "typescript": "^5.4.5"
+    }
 }

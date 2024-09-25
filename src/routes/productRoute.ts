@@ -1,5 +1,5 @@
 import { OpenAPIHono } from "@hono/zod-openapi"
-import { productIdSchema, productRequestSchema } from "../schema/productSchema"
+import { productIdSchema, productRequestSchema, productSlugSchema } from "../schema/productSchema"
 import { productService } from "../services/productService"
 
 const API_TAG = ["Products"]
@@ -33,10 +33,10 @@ export const productRoute = new OpenAPIHono()
     .openapi(
         {
             method: "get",
-            path: "/{id}",
-            description: "Get product by id",
+            path: "/{slug}", // Ganti id dengan slug
+            description: "Get product by slug", // Perbarui deskripsi
             request: {
-                params: productIdSchema, // Pastikan Anda telah mendefinisikan skema validasi untuk ID produk
+                params: productSlugSchema, // Perbarui schema untuk slug
             },
             responses: {
                 200: {
@@ -50,15 +50,15 @@ export const productRoute = new OpenAPIHono()
         },
         async (c) => {
             try {
-                const id = c.req.param("id") // Mengambil ID dari parameter
-                if (!id) {
-                    return c.json({ message: "Product ID is required" }, 400) // Respons jika ID tidak ada
+                const slug = c.req.param("slug")
+                if (!slug) {
+                    return c.json({ message: "Product slug is required" }, 400)
                 }
 
-                const product = await productService.getById(id) // Memanggil service dengan ID
+                const product = await productService.getBySlug(slug)
 
                 if (!product) {
-                    return c.json({ message: "Product not found" }, 404) // Respons jika produk tidak ditemukan
+                    return c.json({ message: "Product not found" }, 404)
                 }
 
                 return c.json({
@@ -164,22 +164,22 @@ export const productRoute = new OpenAPIHono()
         },
         async (c) => {
             try {
-                const id = c.req.param("id") // Mengambil ID dari parameter
+                const id = c.req.param("id")
                 if (!id) {
-                    return c.json({ message: "Product ID is required" }, 400) // Respons jika ID tidak ada
+                    return c.json({ message: "Product ID is required" }, 400)
                 }
 
-                const exists = await productService.isExists(id) // Memeriksa apakah produk ada
+                const exists = await productService.isExists(id)
 
                 if (!exists) {
-                    return c.json({ message: "Product not found" }, 404) // Respons jika produk tidak ditemukan
+                    return c.json({ message: "Product not found" }, 404)
                 }
 
-                await productService.deleteById(id) // Menghapus produk berdasarkan ID
-                return c.json({ message: "Success" }) // Respons sukses
+                await productService.deleteById(id)
+                return c.json({ message: "Success" })
             } catch (error) {
                 console.error("Internal server error:", error)
-                return c.json({ message: "Internal Server Error" }, 500) // Respons kesalahan internal server
+                return c.json({ message: "Internal Server Error" }, 500)
             }
         }
     )
@@ -213,17 +213,17 @@ export const productRoute = new OpenAPIHono()
         },
         async (c) => {
             try {
-                const body = c.req.valid("json") // Validasi dan ambil body dari permintaan
-                const id = c.req.param("id") // Mengambil ID dari parameter
+                const body = c.req.valid("json")
+                const id = c.req.param("id")
 
                 if (!id) {
-                    return c.json({ message: "Product ID is required" }, 400) // Respons jika ID tidak ada
+                    return c.json({ message: "Product ID is required" }, 400)
                 }
 
-                const exists = await productService.isExists(id) // Memeriksa apakah produk ada
+                const exists = await productService.isExists(id)
 
                 if (!exists) {
-                    return c.json({ message: "Product not found" }, 404) // Respons jika produk tidak ditemukan
+                    return c.json({ message: "Product not found" }, 404)
                 }
 
                 const currentProduct = await productService.getById(id)
@@ -233,20 +233,20 @@ export const productRoute = new OpenAPIHono()
                             (await productService.isNameExists(body.name))) ||
                         (currentProduct.sku !== body.sku && (await productService.isSkuExists(body.sku)))
                     ) {
-                        return c.json({ message: "Product with this name or SKU already exists" }, 409) // Respons jika nama atau SKU sudah ada
+                        return c.json({ message: "Product with this name or SKU already exists" }, 409)
                     }
                 }
 
-                await productService.update(id, body) // Memperbarui produk dengan data baru
-                const updatedProduct = await productService.getById(id) // Mendapatkan produk yang telah diperbarui
+                await productService.update(id, body)
+                const updatedProduct = await productService.getById(id)
 
                 return c.json({
                     message: "Success",
                     data: updatedProduct,
-                }) // Respons sukses
+                })
             } catch (error) {
                 console.error("Internal server error:", error)
-                return c.json({ message: "Internal Server Error" }, 500) // Respons kesalahan internal server
+                return c.json({ message: "Internal Server Error" }, 500)
             }
         }
     )

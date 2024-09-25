@@ -13,6 +13,12 @@ export const productService = {
         })
     },
 
+    async getBySlug(slug: string): Promise<Product | null> {
+        return await prisma.product.findUnique({
+            where: { slug }, // Cari berdasarkan slug
+        })
+    },
+
     async isExists(id: string): Promise<boolean> {
         const product = await prisma.product.findUnique({
             where: { id },

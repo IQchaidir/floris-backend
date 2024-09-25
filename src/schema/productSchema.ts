@@ -1,6 +1,5 @@
 import { z } from "zod"
 
-// Skema untuk permintaan pembuatan produk
 export const productRequestSchema = z.object({
     slug: z.string().min(1).openapi({ example: "example-product" }),
     name: z.string().min(1).openapi({ example: "Contoh Produk" }),
@@ -10,7 +9,10 @@ export const productRequestSchema = z.object({
     sku: z.string().min(1).openapi({ example: "SKU12345" }),
 })
 
-// Skema untuk parameter ID produk
 export const productIdSchema = z.object({
-    id: z.coerce.string().openapi({ example: "cuid-example-id" }), // Menggunakan string karena id adalah String di model
+    id: z.coerce.string().openapi({ example: "cuid-example-id" }),
+})
+
+export const productSlugSchema = z.object({
+    slug: z.string().min(1, "Slug is required"), // Validasi slug
 })
