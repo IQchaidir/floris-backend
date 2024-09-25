@@ -1,20 +1,23 @@
 {
-  "name": "amazingsafari-backend",
+  "name": "floris-backend",
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
-    "start": "bun run src/index.ts",
+    "dev": "bun run --hot src/index.tsx",
+    "start": "bun run src/index.tsx",
     "docker:dev": "docker compose -f docker-compose.dev.yaml up -d",
     "docker:prod": "docker compose up -d",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:gen": "prisma generate --no-hints",
     "db:seed": "prisma db seed",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "seed": "bun run prisma/seed.ts"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
+  "seed": "tsx prisma/seed.ts"
+  },  
   "dependencies": {
+    "@hono/swagger-ui": "^0.4.1",
+    "@hono/zod-openapi": "^0.16.0",
     "@hono/zod-validator": "^0.2.2",
     "@prisma/client": "^5.17.0",
     "hono": "^4.4.5",

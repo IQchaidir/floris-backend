@@ -5,6 +5,8 @@ services:
       context: .
     ports:
       - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?schema=public
     depends_on:
       - database
 
@@ -13,9 +15,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - floris:/var/lib/postgresql/data
     env_file:
       - path: .env
 
 volumes:
-  pgdata:
+  floris:
