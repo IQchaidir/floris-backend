@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(cuid())
+
+  username String @unique
+  email String @unique
+
+  password Password?
+
+  carts Cart[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Password {
+  id String @id @default(cuid())
+
+  hash String
+
+  user User @relation(fields: [user_id],references: [id])
+  user_id String @unique
+
+  @@map("passwords")
+}
+
+model Product {
+  id String @id @default(cuid())
+
+  slug String @unique
+  name String @unique
+  imageURL String 
+  price Int
+  description String
+  sku String @unique  
+
+  cartitems CartItem[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  @@map("products")
+}
+
+model CartItem {
+  id String @id @default(cuid())
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  quantity Int @default(1)
+
+  cart   Cart   @relation(fields: [cartId], references: [id])
+  cartId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cart {
+  id String @id @default(cuid())
+
+  user   User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  items CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
