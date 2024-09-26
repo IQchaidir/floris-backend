@@ -33,10 +33,10 @@ export const productRoute = new OpenAPIHono()
     .openapi(
         {
             method: "get",
-            path: "/{slug}", // Ganti id dengan slug
-            description: "Get product by slug", // Perbarui deskripsi
+            path: "/{slug}",
+            description: "Get product by slug",
             request: {
-                params: productSlugSchema, // Perbarui schema untuk slug
+                params: productSlugSchema,
             },
             responses: {
                 200: {
