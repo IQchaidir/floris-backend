@@ -42,7 +42,7 @@ export const productRoute = new OpenAPIHono()
             ],
             responses: {
                 200: {
-                    description: "List of filtered, sorted, and paginated products",
+                    description: "Success get product",
                 },
                 404: {
                     description: "No products found",
