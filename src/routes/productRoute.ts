@@ -9,17 +9,54 @@ export const productRoute = new OpenAPIHono()
         {
             method: "get",
             path: "/",
-            description: "Get all products",
+            description: "Get all products or filter by name and sort",
+            parameters: [
+                {
+                    name: "search",
+                    in: "query",
+                    required: false,
+                    description: "Product name to search",
+                    schema: { type: "string" },
+                },
+                {
+                    name: "sort",
+                    in: "query",
+                    required: false,
+                    description: "Sort by name or price",
+                    schema: { type: "string", enum: ["name_asc", "name_desc", "price_asc", "price_desc"] },
+                },
+            ],
             responses: {
                 200: {
-                    description: "List of products",
+                    description: "List of filtered or sorted products",
+                },
+                404: {
+                    description: "No products found",
                 },
             },
             tags: API_TAG,
         },
         async (c) => {
             try {
-                const products = await productService.getAll()
+                const searchQuery = c.req.query("search")
+                const categoryQuery = c.req.query("category")
+                const sortQuery = c.req.query("sort")
+
+                const products = await productService.getAll({
+                    search: searchQuery,
+                    category: categoryQuery,
+                    sort: sortQuery,
+                })
+
+                if (products.length === 0) {
+                    return c.json(
+                        {
+                            message: "No products found",
+                        },
+                        404
+                    )
+                }
+
                 return c.json({
                     message: "Success",
                     data: products,

@@ -1,10 +1,43 @@
-import { PrismaClient, Product } from "@prisma/client"
+import { Prisma, PrismaClient, Product } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
+interface ProductFilter {
+    search?: string
+    category?: string
+    sort?: string
+}
+
 export const productService = {
-    async getAll(): Promise<Product[]> {
-        return await prisma.product.findMany()
+    async getAll(filters: ProductFilter): Promise<Product[]> {
+        const { search, category, sort } = filters
+
+        const whereConditions: Prisma.ProductWhereInput = {}
+
+        if (search) {
+            whereConditions.name = {
+                contains: search,
+                mode: "insensitive",
+            }
+        }
+
+        let orderBy: Prisma.ProductOrderByWithRelationInput[] = []
+        if (sort) {
+            if (sort === "name_asc") {
+                orderBy.push({ name: "asc" })
+            } else if (sort === "name_desc") {
+                orderBy.push({ name: "desc" })
+            } else if (sort === "price_asc") {
+                orderBy.push({ price: "asc" })
+            } else if (sort === "price_desc") {
+                orderBy.push({ price: "desc" })
+            }
+        }
+
+        return await prisma.product.findMany({
+            where: whereConditions,
+            orderBy: orderBy,
+        })
     },
 
     async getById(id: string): Promise<Product | null> {
@@ -15,7 +48,7 @@ export const productService = {
 
     async getBySlug(slug: string): Promise<Product | null> {
         return await prisma.product.findUnique({
-            where: { slug }, // Cari berdasarkan slug
+            where: { slug },
         })
     },
 
