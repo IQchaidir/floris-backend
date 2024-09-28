@@ -68,6 +68,7 @@ export const productRoute = new OpenAPIHono()
                     return c.json(
                         {
                             message: "No products found",
+                            data: [],
                         },
                         404
                     )
