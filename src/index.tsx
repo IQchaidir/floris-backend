@@ -17,9 +17,9 @@ app.route("/api/products", productRoute)
         openapi: "3.0.0",
         info: {
             version: "1.0.0",
-            title: "Peak Route Rest Api",
+            title: "Floris Rest API",
             description:
-                "The Mountain API provides access to detailed information about mountains in Indonesia, including their associated climbing routes. This API enables users to retrieve data about each mountain, including its name, height, and geographical location, as well as the different climbing routes available for each mountain.",
+                "Floris rest API provides access to simple e commerce plantFloris is an API designed for an e-commerce platform that specializes in selling a variety of houseplants. The API allows users to browse, search, filter, and purchase plants while providing features for managing products, orders, and user accounts.",
         },
     })
     .get("/ui", swaggerUI({ url: "/docs" }))
