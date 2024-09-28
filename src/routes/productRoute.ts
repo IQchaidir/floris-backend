@@ -25,10 +25,24 @@ export const productRoute = new OpenAPIHono()
                     description: "Sort by name or price",
                     schema: { type: "string", enum: ["name_asc", "name_desc", "price_asc", "price_desc"] },
                 },
+                {
+                    name: "page",
+                    in: "query",
+                    required: false,
+                    description: "Page number for pagination",
+                    schema: { type: "integer", default: 1 },
+                },
+                {
+                    name: "limit",
+                    in: "query",
+                    required: false,
+                    description: "Number of products per page",
+                    schema: { type: "integer", default: 10 },
+                },
             ],
             responses: {
                 200: {
-                    description: "List of filtered or sorted products",
+                    description: "List of filtered, sorted, and paginated products",
                 },
                 404: {
                     description: "No products found",
@@ -39,16 +53,18 @@ export const productRoute = new OpenAPIHono()
         async (c) => {
             try {
                 const searchQuery = c.req.query("search")
-                const categoryQuery = c.req.query("category")
                 const sortQuery = c.req.query("sort")
+                const page = parseInt(c.req.query("page") || "1")
+                const limit = parseInt(c.req.query("limit") || "10")
 
                 const products = await productService.getAll({
                     search: searchQuery,
-                    category: categoryQuery,
                     sort: sortQuery,
+                    page,
+                    limit,
                 })
 
-                if (products.length === 0) {
+                if (products.items.length === 0) {
                     return c.json(
                         {
                             message: "No products found",
@@ -59,7 +75,10 @@ export const productRoute = new OpenAPIHono()
 
                 return c.json({
                     message: "Success",
-                    data: products,
+                    data: products.items,
+                    totalItems: products.totalItems,
+                    totalPages: products.totalPages,
+                    currentPage: products.currentPage,
                 })
             } catch (error) {
                 console.error("Internal server error:", error)

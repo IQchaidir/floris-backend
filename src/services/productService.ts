@@ -4,13 +4,16 @@ const prisma = new PrismaClient()
 
 interface ProductFilter {
     search?: string
-    category?: string
     sort?: string
+    page?: number
+    limit?: number
 }
 
 export const productService = {
-    async getAll(filters: ProductFilter): Promise<Product[]> {
-        const { search, category, sort } = filters
+    async getAll(
+        filters: ProductFilter
+    ): Promise<{ items: Product[]; totalItems: number; totalPages: number; currentPage: number }> {
+        const { search, sort, page = 1, limit = 10 } = filters
 
         const whereConditions: Prisma.ProductWhereInput = {}
 
@@ -34,10 +37,23 @@ export const productService = {
             }
         }
 
-        return await prisma.product.findMany({
+        const skip = (page - 1) * limit
+        const totalItems = await prisma.product.count({ where: whereConditions })
+        const items = await prisma.product.findMany({
             where: whereConditions,
             orderBy: orderBy,
+            skip,
+            take: limit,
         })
+
+        const totalPages = Math.ceil(totalItems / limit)
+
+        return {
+            items,
+            totalItems,
+            totalPages,
+            currentPage: page,
+        }
     },
 
     async getById(id: string): Promise<Product | null> {
