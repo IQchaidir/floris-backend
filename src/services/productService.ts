@@ -4,16 +4,17 @@ const prisma = new PrismaClient()
 
 interface ProductFilter {
     search?: string
+    category?: string
     sort?: string
-    page?: number
-    limit?: number
+    page: number
+    limit: number
 }
 
 export const productService = {
     async getAll(
         filters: ProductFilter
     ): Promise<{ items: Product[]; totalItems: number; totalPages: number; currentPage: number }> {
-        const { search, sort, page = 1, limit = 10 } = filters
+        const { search, sort, page, limit } = filters
 
         const whereConditions: Prisma.ProductWhereInput = {}
 
