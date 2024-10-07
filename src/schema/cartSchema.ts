@@ -1,12 +1,22 @@
 import { z } from "zod"
 
 export const cartItemSchema = z.object({
-    productId: z.string().nonempty({ message: "Product ID is required" }),
-    quantity: z.number().min(1, { message: "Quantity must be at least 1" }),
+    productId: z.string().min(1, { message: "Product ID is required" }).openapi({ example: "product-12345" }),
+    quantity: z
+        .number()
+        .int({ message: "Quantity must be an integer" })
+        .min(1, { message: "Quantity must be at least 1" })
+        .openapi({ example: 2 }),
 })
 
-export const cartSchema = z.object({
-    items: z.array(cartItemSchema),
-    totalQuantity: z.number().nonnegative(),
-    totalPrice: z.number().nonnegative(),
+export const updateCartItemSchema = z.object({
+    quantity: z
+        .number()
+        .int({ message: "Quantity must be an integer" })
+        .min(1, { message: "Quantity must be at least 1" })
+        .openapi({ example: 3 }),
+})
+
+export const itemIdSchema = z.object({
+    itemId: z.string().min(1, "itemId is required"),
 })

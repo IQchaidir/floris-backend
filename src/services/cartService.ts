@@ -36,10 +36,6 @@ export const cartService = {
             throw new Error(`Product with ID ${productId} does not exist.`)
         }
 
-        // if (quantity > product.stock) {
-        //     throw new Error(`Insufficient stock for product ID ${productId}. Available stock: ${product.stock}`);
-        // }
-
         const existingCart = await this.existingCart(userId)
 
         const existingItem = await prisma.cartItem.findFirst({
@@ -50,11 +46,6 @@ export const cartService = {
         })
 
         if (existingItem) {
-            // const newQuantity = existingItem.quantity + quantity;
-            // if (newQuantity > product.stock) {
-            //     throw new Error(`Adding ${quantity} exceeds available stock for product ID ${productId}. Available stock: ${product.stock}`);
-            // }
-
             const updatedItem = await prisma.cartItem.update({
                 where: { id: existingItem.id },
                 data: {
@@ -74,5 +65,43 @@ export const cartService = {
             })
             return newItem
         }
+    },
+
+    async updateCart(itemId: string, quantity: number) {
+        const existingItem = await prisma.cartItem.findUnique({
+            where: { id: itemId },
+            include: { product: true },
+        })
+
+        if (!existingItem) {
+            throw new Error(`Cart item with ID ${itemId} does not exist.`)
+        }
+
+        if (!existingItem.product) {
+            throw new Error(`Product associated with cart item ${itemId} does not exist.`)
+        }
+
+        const updatedItem = await prisma.cartItem.update({
+            where: { id: itemId },
+            data: { quantity: quantity },
+        })
+
+        return updatedItem
+    },
+
+    async removeCartItem(itemId: string) {
+        const existingItem = await prisma.cartItem.findUnique({
+            where: { id: itemId },
+        })
+
+        if (!existingItem) {
+            throw new Error(`Cart item with ID ${itemId} does not exist.`)
+        }
+
+        await prisma.cartItem.delete({
+            where: { id: itemId },
+        })
+
+        return { message: `Success remove item.` }
     },
 }

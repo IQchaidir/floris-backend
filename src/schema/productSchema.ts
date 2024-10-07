@@ -14,5 +14,5 @@ export const productIdSchema = z.object({
 })
 
 export const productSlugSchema = z.object({
-    slug: z.string().min(1, "Slug is required"), // Validasi slug
+    slug: z.string().min(1, "Slug is required"),
 })
