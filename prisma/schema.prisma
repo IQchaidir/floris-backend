@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,14 +11,14 @@ model User {
   id String @id @default(cuid())
 
   username String @unique
-  email String @unique
+  email    String @unique
 
   password Password?
 
   carts Cart[]
 
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("users")
 }
@@ -29,7 +28,7 @@ model Password {
 
   hash String
 
-  user User @relation(fields: [user_id],references: [id])
+  user    User   @relation(fields: [user_id], references: [id])
   user_id String @unique
 
   @@map("passwords")
@@ -38,17 +37,18 @@ model Password {
 model Product {
   id String @id @default(cuid())
 
-  slug String @unique
-  name String @unique
-  imageURL String 
-  price Int
+  slug        String @unique
+  name        String @unique
+  imageURL    String
+  price       Int
   description String
-  sku String @unique  
+  sku         String @unique
+  stock       Int    @default(0)
 
   cartitems CartItem[]
 
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("products")
 }
@@ -71,7 +71,7 @@ model CartItem {
 model Cart {
   id String @id @default(cuid())
 
-  user   User   @relation(fields: [user_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id])
   user_id String
 
   items CartItem[]

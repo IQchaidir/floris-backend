@@ -3,6 +3,9 @@ import { swaggerUI } from "@hono/swagger-ui"
 import { HomePage } from "./home-page"
 import { productRoute } from "./routes/productRoute"
 import { cors } from "hono/cors"
+import { authRoute } from "./routes/authRoutes"
+import { userRoute } from "./routes/userRoutes"
+import { cartRoute } from "./routes/cartRoutes"
 
 const app = new OpenAPIHono()
 app.use(
@@ -12,7 +15,15 @@ app.use(
     })
 )
 
+app.openAPIRegistry.registerComponent("securitySchemes", "BearerAuth", {
+    type: "http",
+    scheme: "bearer",
+})
+
 app.route("/api/products", productRoute)
+app.route("/api/users", userRoute)
+app.route("/api/auth", authRoute)
+app.route("/api/cart", cartRoute)
     .doc31("/docs", {
         openapi: "3.0.0",
         info: {

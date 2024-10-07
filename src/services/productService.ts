@@ -19,10 +19,7 @@ export const productService = {
         const whereConditions: Prisma.ProductWhereInput = {}
 
         if (search) {
-            whereConditions.name = {
-                contains: search,
-                mode: "insensitive",
-            }
+            whereConditions.name = { contains: search, mode: "insensitive" }
         }
 
         let orderBy: Prisma.ProductOrderByWithRelationInput[] = []
