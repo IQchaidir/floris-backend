@@ -7,6 +7,6 @@ export const registerSchema = z.object({
 })
 
 export const loginSchema = z.object({
-    username: z.string().min(4).max(100).openapi({ example: "new_user" }),
-    password: z.string().min(8).openapi({ example: "password123" }),
+    username: z.string().openapi({ example: "new_user" }),
+    password: z.string().openapi({ example: "password123" }),
 })

@@ -67,7 +67,7 @@ export const cartRoute = new OpenAPIHono<Hono>()
                 const body = c.req.valid("json")
                 const newItem = await cartService.addItem(user.id, body.productId, body.quantity)
 
-                return c.json({ message: "Item added to cart", item: newItem }, 201)
+                return c.json({ message: "Product added to cart!", item: newItem }, 201)
             } catch (error: Error | any) {
                 return c.json({ message: error.message, error: error.message }, 400)
             }
