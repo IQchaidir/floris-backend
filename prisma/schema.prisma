@@ -43,6 +43,7 @@ model Product {
   price       Int
   description String
   sku         String @unique
+  stock       Int    @default(0)
 
   cartitems CartItem[]
 
