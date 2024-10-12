@@ -28,14 +28,6 @@ export const cartService = {
     },
 
     async addItem(userId: string, productId: string, quantity: number) {
-        const product = await prisma.product.findUnique({
-            where: { id: productId },
-        })
-
-        if (!product) {
-            throw new Error(`Product with ID ${productId} does not exist.`)
-        }
-
         const existingCart = await this.existingCart(userId)
 
         const existingItem = await prisma.cartItem.findFirst({
