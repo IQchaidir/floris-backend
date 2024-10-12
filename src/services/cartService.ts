@@ -24,7 +24,18 @@ export const cartService = {
             return newCart
         }
 
-        return existingCart
+        const itemsWithTotalPrice = existingCart.items.map((item) => ({
+            ...item,
+            totalPrice: item.quantity * item.product.price,
+        }))
+
+        const totalAmount = itemsWithTotalPrice.reduce((sum, item) => sum + item.totalPrice, 0)
+
+        return {
+            ...existingCart,
+            items: itemsWithTotalPrice,
+            totalAmount,
+        }
     },
 
     async addItem(userId: string, productId: string, quantity: number) {

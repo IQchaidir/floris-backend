@@ -50,13 +50,26 @@ export const authService = {
     async getUser(userId: string) {
         const user = await prisma.user.findUnique({
             where: { id: userId },
-            select: { id: true, username: true, email: true },
         })
 
         if (!user) {
             throw new Error("User not found")
         }
 
-        return user
+        const totalProductsInCart = await prisma.cartItem.aggregate({
+            _sum: {
+                quantity: true,
+            },
+            where: {
+                cart: {
+                    user_id: userId,
+                },
+            },
+        })
+
+        return {
+            ...user,
+            totalCart: totalProductsInCart._sum.quantity,
+        }
     },
 }
