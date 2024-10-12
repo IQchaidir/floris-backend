@@ -69,7 +69,7 @@ export const cartRoute = new OpenAPIHono<Hono>()
 
                 return c.json({ message: "Item added to cart", item: newItem }, 201)
             } catch (error: Error | any) {
-                return c.json({ message: "Failed to add item to cart", error: error.message }, 400)
+                return c.json({ message: error.message, error: error.message }, 400)
             }
         }
     )
@@ -111,7 +111,7 @@ export const cartRoute = new OpenAPIHono<Hono>()
 
                 return c.json({ message: "Cart item updated", item: updatedItem }, 200)
             } catch (error: Error | any) {
-                return c.json({ message: "Failed to update cart item", error: error.message }, 400)
+                return c.json({ message: error.message, error: error.message }, 400)
             }
         }
     )
